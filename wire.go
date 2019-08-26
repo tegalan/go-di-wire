@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/wire"
+)
 
 // ProvideDeps ...
 func ProvideDeps() *Deps {
@@ -11,10 +15,22 @@ func ProvideDeps() *Deps {
 
 // ProvideService ...
 func ProvideService(deps *Deps) Service {
-	return Service{Deps: deps}
+	return Service{deps}
 }
 
-// InitService ..
-func InitService() {
+// ProvideAnotherService ...
+func ProvideAnotherService(deps *Deps) AnotherService {
+	return AnotherService{deps}
+}
 
+// InitService ...
+func InitService() Service {
+	wire.Build(ProvideDeps, ProvideService)
+	return Service{}
+}
+
+// InitAnotherService ...
+func InitAnotherService() AnotherService {
+	wire.Build(ProvideDeps, ProvideAnotherService)
+	return AnotherService{}
 }
