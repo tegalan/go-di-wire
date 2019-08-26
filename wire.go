@@ -6,11 +6,20 @@ import (
 	"github.com/google/wire"
 )
 
+// Single Instance
+var deps *Deps
+
 // ProvideDeps ...
 func ProvideDeps() *Deps {
-	return &Deps{
+	if deps != nil {
+		return deps
+	}
+
+	deps = &Deps{
 		date: time.Now(),
 	}
+
+	return deps
 }
 
 // ProvideService ...

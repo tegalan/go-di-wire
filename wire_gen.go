@@ -12,32 +12,41 @@ import (
 // Injectors from wire.go:
 
 func InitService() Service {
-	deps := ProvideDeps()
-	service := ProvideService(deps)
+	mainDeps := ProvideDeps()
+	service := ProvideService(mainDeps)
 	return service
 }
 
 func InitAnotherService() AnotherService {
-	deps := ProvideDeps()
-	anotherService := ProvideAnotherService(deps)
+	mainDeps := ProvideDeps()
+	anotherService := ProvideAnotherService(mainDeps)
 	return anotherService
 }
 
 // wire.go:
 
+// Single Instance
+var deps *Deps
+
 // ProvideDeps ...
 func ProvideDeps() *Deps {
-	return &Deps{
+	if deps != nil {
+		return deps
+	}
+
+	deps = &Deps{
 		date: time.Now(),
 	}
+
+	return deps
 }
 
 // ProvideService ...
-func ProvideService(deps *Deps) Service {
-	return Service{deps}
+func ProvideService(deps2 *Deps) Service {
+	return Service{deps2}
 }
 
 // ProvideAnotherService ...
-func ProvideAnotherService(deps *Deps) AnotherService {
-	return AnotherService{deps}
+func ProvideAnotherService(deps2 *Deps) AnotherService {
+	return AnotherService{deps2}
 }
